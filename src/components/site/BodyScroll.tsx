@@ -59,8 +59,10 @@ export function BodyScroll() {
   const canvasRef = useRef<HTMLDivElement>(null);
   const progressRef = useRef(0);
   const enabledRef = useRef<boolean[]>(stages.map((_, index) => index === 0));
+  const buildModeRef = useRef(false);
   const [progress, setProgress] = useState(0);
   const [enabled, setEnabled] = useState<boolean[]>(stages.map((_, index) => index === 0));
+  const [buildMode, setBuildMode] = useState(false);
 
   useEffect(() => {
     const mount = canvasRef.current;
@@ -163,6 +165,7 @@ export function BodyScroll() {
       const horizontal = current < 0.5 ? -current * 2 : (current - 0.5) * 2;
       body.position.x = horizontal * 0.9;
       body.rotation.z = Math.sin(current * Math.PI * 2) * 0.035;
+      controls.enabled = buildModeRef.current;
       implantGroups.forEach(({ group, material }, index) => {
         const scrollAmount = THREE.MathUtils.clamp((current * stages.length - index) * 4, 0, 1);
         const amount = enabledRef.current[index] ? Math.max(scrollAmount, 1) : 0;
@@ -197,6 +200,12 @@ export function BodyScroll() {
     );
     enabledRef.current = next;
     setEnabled(next);
+  };
+
+  const toggleBuildMode = () => {
+    const next = !buildModeRef.current;
+    buildModeRef.current = next;
+    setBuildMode(next);
   };
 
   useEffect(() => {
@@ -264,7 +273,7 @@ export function BodyScroll() {
             >
               <div
                 ref={canvasRef}
-                className="h-full w-full cursor-grab active:cursor-grabbing"
+                className={`h-full w-full ${buildMode ? "cursor-grab active:cursor-grabbing" : "pointer-events-none"}`}
                 aria-label="Modèle 3D low-poly cybernétique Synaptik"
                 role="img"
               />
@@ -304,39 +313,61 @@ export function BodyScroll() {
           </div>
 
           <div className="absolute bottom-12 left-1/2 z-10 w-[min(92vw,34rem)] -translate-x-1/2 border border-border bg-card/90 p-3 backdrop-blur">
-            <div className="mb-3 flex items-center justify-between">
-              <p className="mono-label flex items-center gap-2 text-primary">
-                <Rotate3D className="h-3.5 w-3.5" />
-                Atelier d'armure
-              </p>
-              <p className="font-mono text-[10px] text-muted-foreground">
-                {enabled.filter(Boolean).length}/4 actifs
-              </p>
-            </div>
-            <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-              {stages.map((item, index) => (
-                <button
-                  key={item.id}
-                  type="button"
-                  aria-pressed={enabled[index]}
-                  onClick={() => toggleImplant(index)}
-                  className={`bevel-sm flex min-h-12 items-center justify-between gap-2 border px-3 py-2 text-left transition-colors ${
-                    enabled[index]
-                      ? "border-primary/70 bg-primary/15 text-foreground"
-                      : "border-border bg-background text-muted-foreground hover:border-primary/50"
-                  }`}
-                >
-                  <span className="font-mono text-[10px] leading-tight">
-                    {item.label.split(" / ")[1]}
-                  </span>
-                  {enabled[index] ? (
-                    <Minus className="h-3.5 w-3.5 shrink-0 text-primary" />
-                  ) : (
-                    <Plus className="h-3.5 w-3.5 shrink-0" />
-                  )}
-                </button>
-              ))}
-            </div>
+            {!buildMode ? (
+              <button
+                type="button"
+                onClick={toggleBuildMode}
+                className="bevel flex w-full items-center justify-center gap-3 border border-primary/70 bg-primary/15 px-4 py-3 font-display text-xs font-bold tracking-[0.16em] text-primary transition-colors hover:bg-primary/25"
+              >
+                <Rotate3D className="h-4 w-4" />
+                ENTRER EN ARMOR BUILD
+              </button>
+            ) : (
+              <>
+                <div className="mb-3 flex items-center justify-between gap-3">
+                  <p className="mono-label flex items-center gap-2 text-primary">
+                    <Rotate3D className="h-3.5 w-3.5" />
+                    Armor build · rotation / zoom actifs
+                  </p>
+                  <button
+                    type="button"
+                    onClick={toggleBuildMode}
+                    className="font-mono text-[10px] text-muted-foreground transition-colors hover:text-primary"
+                  >
+                    QUITTER
+                  </button>
+                </div>
+                <div className="mb-3 flex justify-end">
+                  <p className="font-mono text-[10px] text-muted-foreground">
+                    {enabled.filter(Boolean).length}/4 actifs
+                  </p>
+                </div>
+                <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                  {stages.map((item, index) => (
+                    <button
+                      key={item.id}
+                      type="button"
+                      aria-pressed={enabled[index]}
+                      onClick={() => toggleImplant(index)}
+                      className={`bevel-sm flex min-h-12 items-center justify-between gap-2 border px-3 py-2 text-left transition-colors ${
+                        enabled[index]
+                          ? "border-primary/70 bg-primary/15 text-foreground"
+                          : "border-border bg-background text-muted-foreground hover:border-primary/50"
+                      }`}
+                    >
+                      <span className="font-mono text-[10px] leading-tight">
+                        {item.label.split(" / ")[1]}
+                      </span>
+                      {enabled[index] ? (
+                        <Minus className="h-3.5 w-3.5 shrink-0 text-primary" />
+                      ) : (
+                        <Plus className="h-3.5 w-3.5 shrink-0" />
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
           </div>
 
           {/* annotation */}
