@@ -1,0 +1,21 @@
+# Synaptik Corp
+
+> Mégacorporation de bio-mécatronique (univers cyberpunk, fiction). Conception, calibrage et pose d'implants cybernétiques certifiés norme NS-88. Baseline : « Transcendez la condition humaine. »
+
+Ce site est une maquette e-commerce fictive réalisée dans un cadre pédagogique.
+
+## Gammes de produits
+- Neural & Cortex : puces cognitives et co-processeurs synaptiques (netrunners, analystes)
+- Optique & Sensoriel : implants oculaires, filtres thermiques, capteurs auditifs (sécurité, créatifs)
+- Musculo-Squelettique : prothèses, renforts vertébraux, tendons cinétiques (athlètes, travailleurs)
+- Systémique & Organique : filtres sanguins, régulateurs métaboliques (militaires, survivalistes)
+- Packs Promotionnels : combinaisons d'implants à tarif réduit
+
+## Pages prioritaires
+- /#catalogue : catalogue complet avec ordonnancement par profil client
+- /#anatomie : visualisation anatomique des zones d'implantation
+- /#simulateur : simulateur de compatibilité neuro-synaptique et score de cyberpsychose
+
+## Notes
+- Devise : EUR. Livraison sous 48h, pose chirurgicale sous 5 à 9 jours.
+- Assistance : V.E.R.A. (Virtual Enhancement Robotic Assistant), avec reprise possible par un opérateur humain.
