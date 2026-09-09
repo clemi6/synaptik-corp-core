@@ -107,7 +107,7 @@ export function BodyScroll() {
 
     let disposed = false;
     const loader = new GLTFLoader();
-    loader.load("/models/Soldier.glb", (gltf) => {
+    loader.load("./models/Soldier.glb", (gltf) => {
       if (disposed) return;
       const model = gltf.scene;
       const bounds = new THREE.Box3().setFromObject(model);

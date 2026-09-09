@@ -1,5 +1,9 @@
 # Synaptik Upgrade
 
+## Site en ligne
+
+Le site interactif est publié ici : [clemi6.github.io/synaptik-corp-core](https://clemi6.github.io/synaptik-corp-core/)
+
 Entreprise : CyberWear   ||  Synaptik Corp
 
 
