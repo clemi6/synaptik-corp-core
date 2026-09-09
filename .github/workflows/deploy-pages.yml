@@ -31,6 +31,7 @@ jobs:
         run: npm run build
         env:
           NITRO_PRESET: node-server
+          VITE_BASE_PATH: /synaptik-corp-core
       - name: Export rendered site
         run: node scripts/export-pages.mjs
       - name: Upload Pages artifact
