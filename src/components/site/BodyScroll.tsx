@@ -79,7 +79,7 @@ export function BodyScroll() {
   }, []);
 
   const active = Math.min(stages.length - 1, Math.floor(progress * stages.length * 0.999));
-  const stage = stages[active];
+  const stage = stages[active]!;
 
   return (
     <section id="anatomie" ref={ref} className="relative h-[420vh]">
