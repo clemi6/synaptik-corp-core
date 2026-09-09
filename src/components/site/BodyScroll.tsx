@@ -112,7 +112,8 @@ export function BodyScroll() {
           {/* figure */}
           <div className="relative order-1 mx-auto flex h-[52vh] w-full max-w-[24rem] items-center justify-center lg:order-2 lg:h-[74vh]">
             <div
-              className="relative h-full w-full transition-transform duration-300 ease-out"
+              className="relative h-full w-auto max-w-full transition-transform duration-300 ease-out"
+              style-aspect="1024/1536"
               style={{
                 transform: `perspective(1200px) rotateY(${(progress - 0.5) * 34}deg) scale(${1 + progress * 0.12})`,
               }}
