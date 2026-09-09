@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { Minus, Plus, Rotate3D } from "lucide-react";
 
 type Stage = {
   id: string;
@@ -56,7 +58,9 @@ export function BodyScroll() {
   const ref = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLDivElement>(null);
   const progressRef = useRef(0);
+  const enabledRef = useRef<boolean[]>(stages.map((_, index) => index === 0));
   const [progress, setProgress] = useState(0);
+  const [enabled, setEnabled] = useState<boolean[]>(stages.map((_, index) => index === 0));
 
   useEffect(() => {
     const mount = canvasRef.current;
@@ -67,6 +71,13 @@ export function BodyScroll() {
     const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     mount.appendChild(renderer.domElement);
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.enablePan = false;
+    controls.enableZoom = true;
+    controls.minDistance = 5.7;
+    controls.maxDistance = 11;
+    controls.target.set(0, 0, 0);
 
     scene.add(new THREE.HemisphereLight(0x9defff, 0x071018, 2.2));
     const keyLight = new THREE.DirectionalLight(0x7deaff, 3.5);
@@ -151,13 +162,14 @@ export function BodyScroll() {
       const current = progressRef.current;
       const horizontal = current < 0.5 ? -current * 2 : (current - 0.5) * 2;
       body.position.x = horizontal * 0.9;
-      body.rotation.y = (current - 0.5) * 0.7;
       body.rotation.z = Math.sin(current * Math.PI * 2) * 0.035;
       implantGroups.forEach(({ group, material }, index) => {
-        const amount = THREE.MathUtils.clamp((current * stages.length - index) * 4, 0, 1);
+        const scrollAmount = THREE.MathUtils.clamp((current * stages.length - index) * 4, 0, 1);
+        const amount = enabledRef.current[index] ? Math.max(scrollAmount, 1) : 0;
         material.opacity = amount;
         group.scale.setScalar(0.7 + amount * 0.3);
       });
+      controls.update();
       renderer.render(scene, camera);
       frame = requestAnimationFrame(render);
     };
@@ -166,6 +178,7 @@ export function BodyScroll() {
     return () => {
       cancelAnimationFrame(frame);
       window.removeEventListener("resize", resize);
+      controls.dispose();
       renderer.dispose();
       mount.removeChild(renderer.domElement);
       disposed = true;
@@ -177,6 +190,14 @@ export function BodyScroll() {
       implantGroups.forEach(({ material }) => material.dispose());
     };
   }, []);
+
+  const toggleImplant = (index: number) => {
+    const next = enabledRef.current.map((value, itemIndex) =>
+      itemIndex === index ? !value : value,
+    );
+    enabledRef.current = next;
+    setEnabled(next);
+  };
 
   useEffect(() => {
     let raf = 0;
@@ -234,7 +255,7 @@ export function BodyScroll() {
           </ol>
 
           {/* figure */}
-          <div className="relative order-1 mx-auto flex h-[52vh] w-full max-w-[24rem] items-center justify-center lg:order-2 lg:h-[74vh]">
+          <div className="relative order-1 mx-auto flex h-[58vh] w-full max-w-[34rem] items-center justify-center lg:order-2 lg:h-[78vh]">
             <div
               className="relative h-full w-full max-w-full transition-transform duration-300 ease-out"
               style={{
@@ -243,7 +264,7 @@ export function BodyScroll() {
             >
               <div
                 ref={canvasRef}
-                className="h-full w-full"
+                className="h-full w-full cursor-grab active:cursor-grabbing"
                 aria-label="Modèle 3D low-poly cybernétique Synaptik"
                 role="img"
               />
@@ -256,7 +277,7 @@ export function BodyScroll() {
                     style={{
                       left: `${s.x}%`,
                       top: `${s.y}%`,
-                      opacity: on ? 1 : 0,
+                      opacity: on && enabled[i] ? 1 : 0,
                       transform: `translate(-50%,-50%) scale(${on ? 1 : 0.4})`,
                     }}
                   >
@@ -280,6 +301,42 @@ export function BodyScroll() {
               }}
               aria-hidden
             />
+          </div>
+
+          <div className="absolute bottom-12 left-1/2 z-10 w-[min(92vw,34rem)] -translate-x-1/2 border border-border bg-card/90 p-3 backdrop-blur">
+            <div className="mb-3 flex items-center justify-between">
+              <p className="mono-label flex items-center gap-2 text-primary">
+                <Rotate3D className="h-3.5 w-3.5" />
+                Atelier d'armure
+              </p>
+              <p className="font-mono text-[10px] text-muted-foreground">
+                {enabled.filter(Boolean).length}/4 actifs
+              </p>
+            </div>
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+              {stages.map((item, index) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  aria-pressed={enabled[index]}
+                  onClick={() => toggleImplant(index)}
+                  className={`bevel-sm flex min-h-12 items-center justify-between gap-2 border px-3 py-2 text-left transition-colors ${
+                    enabled[index]
+                      ? "border-primary/70 bg-primary/15 text-foreground"
+                      : "border-border bg-background text-muted-foreground hover:border-primary/50"
+                  }`}
+                >
+                  <span className="font-mono text-[10px] leading-tight">
+                    {item.label.split(" / ")[1]}
+                  </span>
+                  {enabled[index] ? (
+                    <Minus className="h-3.5 w-3.5 shrink-0 text-primary" />
+                  ) : (
+                    <Plus className="h-3.5 w-3.5 shrink-0" />
+                  )}
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* annotation */}
