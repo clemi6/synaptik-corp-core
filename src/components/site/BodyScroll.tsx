@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
 type Stage = {
   id: string;
@@ -61,8 +62,8 @@ export function BodyScroll() {
     const mount = canvasRef.current;
     if (!mount) return;
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(25, 1, 0.1, 100);
-    camera.position.set(0, 0.15, 7.5);
+    const camera = new THREE.PerspectiveCamera(28, 1, 0.1, 100);
+    camera.position.set(0, 0, 8.2);
     const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     mount.appendChild(renderer.domElement);
@@ -77,14 +78,12 @@ export function BodyScroll() {
 
     const body = new THREE.Group();
     scene.add(body);
-    const shell = new THREE.MeshStandardMaterial({
-      color: 0x9aa6ad,
-      roughness: 0.62,
-      metalness: 0.82,
+    const bodyMaterial = new THREE.MeshStandardMaterial({
+      color: 0x8f9ba1,
+      roughness: 0.72,
+      metalness: 0.55,
       flatShading: true,
     });
-    const darkShell = shell.clone();
-    darkShell.color.setHex(0x28343b);
     const cyan = new THREE.MeshStandardMaterial({
       color: 0x43e5ff,
       emissive: 0x0b7183,
@@ -92,53 +91,49 @@ export function BodyScroll() {
       metalness: 0.35,
       roughness: 0.3,
     });
-    const addSphere = (radius: number, position: [number, number, number], material = shell) => {
-      const mesh = new THREE.Mesh(new THREE.IcosahedronGeometry(radius, 1), material);
-      mesh.position.set(...position);
-      body.add(mesh);
-    };
-    const addLimb = (
-      radius: number,
-      length: number,
-      position: [number, number, number],
-      rotation: [number, number, number],
-      material = shell,
-    ) => {
-      const mesh = new THREE.Mesh(
-        new THREE.CylinderGeometry(radius, radius * 1.12, length, 8),
-        material,
-      );
-      mesh.position.set(...position);
-      mesh.rotation.set(...rotation);
-      body.add(mesh);
-    };
 
-    addSphere(0.48, [0, 2.42, 0], darkShell);
-    addSphere(0.62, [0, 1.55, 0], shell);
-    addLimb(0.39, 1.55, [0, 0.47, 0], [0, 0, 0], darkShell);
-    addLimb(0.31, 1.5, [-0.67, 1.05, 0], [0, 0, -0.22]);
-    addLimb(0.31, 1.5, [0.67, 1.05, 0], [0, 0, 0.22]);
-    addLimb(0.24, 1.7, [-0.84, -0.3, 0], [0, 0, -0.12], darkShell);
-    addLimb(0.24, 1.7, [0.84, -0.3, 0], [0, 0, 0.12], darkShell);
-    addSphere(0.28, [-0.98, -1.25, 0], shell);
-    addSphere(0.28, [0.98, -1.25, 0], shell);
-    addLimb(0.16, 1.05, [-0.95, -2.05, 0], [0, 0, -0.04]);
-    addLimb(0.16, 1.05, [0.95, -2.05, 0], [0, 0, 0.04]);
-    const spine = new THREE.Mesh(new THREE.BoxGeometry(0.12, 2.2, 0.18), cyan);
-    spine.position.set(0, 0.45, -0.38);
-    body.add(spine);
+    let disposed = false;
+    const loader = new GLTFLoader();
+    loader.load("/models/Soldier.glb", (gltf) => {
+      if (disposed) return;
+      const model = gltf.scene;
+      const bounds = new THREE.Box3().setFromObject(model);
+      const size = bounds.getSize(new THREE.Vector3());
+      const center = bounds.getCenter(new THREE.Vector3());
+      const scale = 3.55 / size.y;
+      model.scale.setScalar(scale);
+      model.position.set(-center.x * scale, -center.y * scale, -center.z * scale);
+      model.traverse((object) => {
+        if (object instanceof THREE.Mesh) {
+          object.material = bodyMaterial;
+          object.castShadow = true;
+        }
+      });
+      body.add(model);
+    });
 
+    const implantPositions: [number, number, number][] = [
+      [0, 1.78, 0.45],
+      [-0.16, 1.58, 0.5],
+      [-0.5, 0.62, 0.5],
+      [0.16, 1.02, 0.5],
+    ];
     const implantGroups = stages.map((stage, index) => {
       const group = new THREE.Group();
       const material = cyan.clone();
       material.transparent = true;
       material.opacity = index === 0 ? 1 : 0;
-      const node = new THREE.Mesh(new THREE.OctahedronGeometry(0.16, 0), material);
-      node.position.set((stage.x - 50) / 38, 2.25 - index * 0.8, 0.45);
+      const node = new THREE.Mesh(new THREE.BoxGeometry(0.25, 0.12, 0.05), material);
+      node.position.set(...implantPositions[index]!);
+      node.rotation.z = index === 2 ? -0.25 : 0;
       group.add(node);
-      const ring = new THREE.Mesh(new THREE.TorusGeometry(0.23, 0.018, 6, 16), material);
+      const ring = new THREE.Mesh(new THREE.TorusGeometry(0.2, 0.022, 8, 20), material);
       ring.rotation.x = Math.PI / 2;
       node.add(ring);
+      const cable = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.018, 0.38, 6), material);
+      cable.rotation.z = index === 2 ? Math.PI / 2 : 0;
+      cable.position.set(index === 2 ? 0.2 : 0, index === 2 ? 0 : -0.23, -0.01);
+      node.add(cable);
       body.add(group);
       return { group, material };
     });
@@ -155,7 +150,7 @@ export function BodyScroll() {
     const render = () => {
       const current = progressRef.current;
       const horizontal = current < 0.5 ? -current * 2 : (current - 0.5) * 2;
-      body.position.x = horizontal * 1.25;
+      body.position.x = horizontal * 0.9;
       body.rotation.y = (current - 0.5) * 0.7;
       body.rotation.z = Math.sin(current * Math.PI * 2) * 0.035;
       implantGroups.forEach(({ group, material }, index) => {
@@ -173,11 +168,11 @@ export function BodyScroll() {
       window.removeEventListener("resize", resize);
       renderer.dispose();
       mount.removeChild(renderer.domElement);
+      disposed = true;
       scene.traverse((object) => {
         if (object instanceof THREE.Mesh) object.geometry.dispose();
       });
-      shell.dispose();
-      darkShell.dispose();
+      bodyMaterial.dispose();
       cyan.dispose();
       implantGroups.forEach(({ material }) => material.dispose());
     };
@@ -243,7 +238,7 @@ export function BodyScroll() {
             <div
               className="relative h-full w-full max-w-full transition-transform duration-300 ease-out"
               style={{
-                transform: `translateX(${progress < 0.5 ? -progress * 2 * 34 : (progress - 0.5) * 2 * 34}%) scale(${1 + progress * 0.08})`,
+                transform: `translateX(${progress < 0.5 ? -progress * 2 * 22 : (progress - 0.5) * 2 * 22}%) scale(${1 + progress * 0.04})`,
               }}
             >
               <div
