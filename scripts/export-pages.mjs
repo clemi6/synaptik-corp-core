@@ -35,6 +35,7 @@ try {
   html = html.replaceAll('"/assets/', '"./assets/');
   html = html.replaceAll("'/assets/", "'./assets/");
   html = html.replaceAll("delete self.$_TSR,", "");
+  html = html.replaceAll(' type="module" async', ' type="module"');
   await writeFile(`${outputDir}/index.html`, html);
 
   const headers = await readFile(`${outputDir}/_headers`, "utf8").catch(() => "");
