@@ -32,6 +32,9 @@ try {
   await cp(".output/public", outputDir, { recursive: true });
   let html = await response.text();
   html = html.replace(/(href|src)="\/(?!\/)/g, '$1="./');
+  html = html.replaceAll('"/assets/', '"./assets/');
+  html = html.replaceAll("'/assets/", "'./assets/");
+  html = html.replaceAll("delete self.$_TSR,", "");
   await writeFile(`${outputDir}/index.html`, html);
 
   const headers = await readFile(`${outputDir}/_headers`, "utf8").catch(() => "");
