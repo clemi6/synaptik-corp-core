@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Activity, ShoppingCart, User } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 
 export function Header() {
   const [ping, setPing] = useState(12);
@@ -12,29 +13,30 @@ export function Header() {
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-border bg-background/85 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5">
-        <a href="#top" className="flex items-center gap-3">
+        <Link to="/" className="flex items-center gap-3">
           <span className="bevel-sm inline-flex h-8 w-8 items-center justify-center bg-primary font-display text-sm font-bold text-primary-foreground">
             S
           </span>
           <span className="font-display text-sm font-bold tracking-[0.28em] text-foreground">
             SYNAPTIK
           </span>
-        </a>
+        </Link>
 
         <nav className="hidden items-center gap-8 md:flex">
-          {[
-            ["Anatomie", "#anatomie"],
-            ["Catalogue", "#catalogue"],
-            ["Compatibilité", "#simulateur"],
-            ["Corp", "#corp"],
-          ].map(([label, href]) => (
-            <a
+          {([
+            ["Anatomie", "/anatomie"],
+            ["Catalogue", "/catalogue"],
+            ["Compatibilité", "/simulateur"],
+            ["Corp", "/corp"],
+          ] as const).map(([label, href]) => (
+            <Link
               key={href}
-              href={href}
+              to={href}
               className="mono-label transition-colors hover:text-primary"
+              activeProps={{ className: "mono-label text-primary" }}
             >
               {label}
-            </a>
+            </Link>
           ))}
         </nav>
 

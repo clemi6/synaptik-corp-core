@@ -122,7 +122,7 @@ export function BodyScroll() {
                 alt="Modèle anatomique cybernétique Synaptik"
                 width={1024}
                 height={1536}
-                className="h-full w-full object-contain drop-shadow-[0_0_45px_oklch(0.855_0.145_200/0.35)]"
+                className="tint-red h-full w-full object-contain drop-shadow-[0_0_45px_oklch(0.635_0.235_26/0.4)]"
               />
               {stages.map((s, i) => {
                 const on = i <= active;
