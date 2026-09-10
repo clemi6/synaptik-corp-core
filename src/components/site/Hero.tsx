@@ -70,7 +70,7 @@ export function Hero() {
               alt="Puce cognitive Synapse Overclock v4 en gros plan"
               width={1024}
               height={1024}
-              className="bevel-sm w-full object-cover"
+              className="tint-red bevel-sm w-full object-cover"
             />
             <div className="pointer-events-none absolute inset-3 border border-primary/20" />
           </div>

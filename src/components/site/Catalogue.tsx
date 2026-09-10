@@ -91,7 +91,7 @@ export function Catalogue() {
                   loading="lazy"
                   width={1024}
                   height={1024}
-                  className="h-44 w-full object-cover opacity-80 transition-transform duration-500 group-hover:scale-105 group-hover:opacity-100"
+                  className="tint-red h-44 w-full object-cover opacity-80 transition-transform duration-500 group-hover:scale-105 group-hover:opacity-100"
                 />
                 {p.score === 1 && (
                   <span className="bevel-sm absolute left-3 top-3 bg-primary px-2 py-1 font-mono text-[10px] font-bold tracking-widest text-primary-foreground">
