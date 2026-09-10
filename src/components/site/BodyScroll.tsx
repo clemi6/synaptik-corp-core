@@ -20,7 +20,7 @@ const stages: Stage[] = [
     desc: "Co-processeur synaptique greffé sur le cortex préfrontal. Réduit la latence neuronale et augmente la vitesse de traitement cognitif de 40%.",
     specs: ["Bande passante 128 TB/s", "Conso 15 W", "Rejet < 0.02%"],
     x: 50,
-    y: 7,
+    y: 13,
   },
   {
     id: "optique",
@@ -28,8 +28,8 @@ const stages: Stage[] = [
     title: "Iris HUD Tactique Kiroshi-X",
     desc: "Remplacement oculaire complet avec surcouche AR. Télémétrie, thermographie et identification de cibles projetées sur la rétine.",
     specs: ["16K par œil", "Zoom x20", "Thermique intégré"],
-    x: 43,
-    y: 10,
+    x: 46,
+    y: 15,
   },
   {
     id: "musculo",
@@ -37,8 +37,8 @@ const stages: Stage[] = [
     title: "Bras Bionique Titan Grip",
     desc: "Prothèse intégrale à servomoteurs tungstène et coque fibre de carbone. Ancrage vertébral requis au-delà de 400 kg de charge.",
     specs: ["Levage 800 kg", "Alliage W-C", "Rejet 0.1%"],
-    x: 24,
-    y: 42,
+    x: 31,
+    y: 47,
   },
   {
     id: "systemique",
@@ -46,8 +46,8 @@ const stages: Stage[] = [
     title: "Pompe à Adrénaline Régulée",
     desc: "Glande surrénale synthétique déclenchable par commande mentale. Coagulants intégrés, sécurité matérielle à 5 doses par cycle.",
     specs: ["5 doses / jour", "Activation neurale", "Rejet 0.05%"],
-    x: 57,
-    y: 27,
+    x: 53,
+    y: 33,
   },
 ];
 
