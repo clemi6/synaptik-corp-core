@@ -1,3 +1,5 @@
+import { Link } from "@tanstack/react-router";
+
 export function Footer() {
   return (
     <footer id="corp" className="relative border-t border-border bg-card/40 py-16">
@@ -16,18 +18,21 @@ export function Footer() {
         </div>
 
         {[
-          ["Gammes", ["Neural & Cortex", "Optique & Sensoriel", "Musculo-Squelettique", "Systémique & Organique"]],
-          ["Corp", ["À propos", "Cliniques agréées", "Protocole de garantie", "Recrutement"]],
-          ["Protocoles", ["Mentions légales", "Politique de rejet immunitaire", "llms.txt", "Flux RSS"]],
+          ["Gammes", [["Catalogue complet", "/catalogue"], ["Anatomie augmentée", "/anatomie"], ["Simulateur", "/simulateur"], ["Packs promotionnels", "/catalogue"]]],
+          ["Corp", [["À propos", "/corp"], ["Cliniques agréées", "/corp"], ["Protocole de garantie", "/corp"], ["Recrutement", "/corp"]]],
+          ["Protocoles", [["Mentions légales", "/corp"], ["Politique de rejet immunitaire", "/corp"], ["Compatibilité", "/simulateur"], ["Catalogue", "/catalogue"]]],
         ].map(([title, items]) => (
           <div key={title as string}>
             <p className="mono-label">{title as string}</p>
             <ul className="mt-4 space-y-2">
-              {(items as string[]).map((i) => (
-                <li key={i}>
-                  <a href="#" className="text-sm text-muted-foreground transition-colors hover:text-primary">
-                    {i}
-                  </a>
+              {(items as [string, string][]).map(([label, href]) => (
+                <li key={label}>
+                  <Link
+                    to={href}
+                    className="text-sm text-muted-foreground transition-colors hover:text-primary"
+                  >
+                    {label}
+                  </Link>
                 </li>
               ))}
             </ul>

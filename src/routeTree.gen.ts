@@ -10,33 +10,73 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AnatomieRouteImport } from './routes/anatomie'
+import { Route as CatalogueRouteImport } from './routes/catalogue'
+import { Route as CorpRouteImport } from './routes/corp'
+import { Route as SimulateurRouteImport } from './routes/simulateur'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AnatomieRoute = AnatomieRouteImport.update({
+  id: '/anatomie',
+  path: '/anatomie',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CatalogueRoute = CatalogueRouteImport.update({
+  id: '/catalogue',
+  path: '/catalogue',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CorpRoute = CorpRouteImport.update({
+  id: '/corp',
+  path: '/corp',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SimulateurRoute = SimulateurRouteImport.update({
+  id: '/simulateur',
+  path: '/simulateur',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/anatomie': typeof AnatomieRoute
+  '/catalogue': typeof CatalogueRoute
+  '/corp': typeof CorpRoute
+  '/simulateur': typeof SimulateurRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/anatomie': typeof AnatomieRoute
+  '/catalogue': typeof CatalogueRoute
+  '/corp': typeof CorpRoute
+  '/simulateur': typeof SimulateurRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/anatomie': typeof AnatomieRoute
+  '/catalogue': typeof CatalogueRoute
+  '/corp': typeof CorpRoute
+  '/simulateur': typeof SimulateurRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/anatomie' | '/catalogue' | '/corp' | '/simulateur'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/anatomie' | '/catalogue' | '/corp' | '/simulateur'
+  id: '__root__' | '/' | '/anatomie' | '/catalogue' | '/corp' | '/simulateur'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AnatomieRoute: typeof AnatomieRoute
+  CatalogueRoute: typeof CatalogueRoute
+  CorpRoute: typeof CorpRoute
+  SimulateurRoute: typeof SimulateurRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +88,43 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/anatomie': {
+      id: '/anatomie'
+      path: '/anatomie'
+      fullPath: '/anatomie'
+      preLoaderRoute: typeof AnatomieRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/catalogue': {
+      id: '/catalogue'
+      path: '/catalogue'
+      fullPath: '/catalogue'
+      preLoaderRoute: typeof CatalogueRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/corp': {
+      id: '/corp'
+      path: '/corp'
+      fullPath: '/corp'
+      preLoaderRoute: typeof CorpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/simulateur': {
+      id: '/simulateur'
+      path: '/simulateur'
+      fullPath: '/simulateur'
+      preLoaderRoute: typeof SimulateurRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AnatomieRoute: AnatomieRoute,
+  CatalogueRoute: CatalogueRoute,
+  CorpRoute: CorpRoute,
+  SimulateurRoute: SimulateurRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
