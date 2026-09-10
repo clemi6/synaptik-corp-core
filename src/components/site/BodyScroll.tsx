@@ -37,7 +37,7 @@ const stages: Stage[] = [
     title: "Bras Bionique Titan Grip",
     desc: "Prothèse intégrale à servomoteurs tungstène et coque fibre de carbone. Ancrage vertébral requis au-delà de 400 kg de charge.",
     specs: ["Levage 800 kg", "Alliage W-C", "Rejet 0.1%"],
-    x: 31,
+    x: 34,
     y: 47,
   },
   {
