@@ -194,3 +194,34 @@
 @utility tint-red {
   filter: hue-rotate(185deg) saturate(1.2);
 }
+
+@keyframes psycho-shake {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  25% { transform: translate3d(calc(var(--glitch-i) * -4px), calc(var(--glitch-i) * 2px), 0); }
+  50% { transform: translate3d(calc(var(--glitch-i) * 3px), calc(var(--glitch-i) * -3px), 0); }
+  75% { transform: translate3d(calc(var(--glitch-i) * -2px), calc(var(--glitch-i) * 3px), 0); }
+}
+
+@keyframes psycho-slice {
+  0% { clip-path: inset(0 0 92% 0); }
+  25% { clip-path: inset(45% 0 40% 0); }
+  50% { clip-path: inset(80% 0 8% 0); }
+  75% { clip-path: inset(20% 0 65% 0); }
+  100% { clip-path: inset(0 0 92% 0); }
+}
+
+@keyframes psycho-flash {
+  0%, 100% { opacity: 0.15; }
+  50% { opacity: 1; }
+}
+
+@keyframes psycho-warn {
+  0%, 100% { transform: translate(0, 0) skewX(0deg); opacity: 1; }
+  40% { transform: translate(-3px, 1px) skewX(-1.5deg); opacity: 0.75; }
+  70% { transform: translate(3px, -1px) skewX(1.5deg); opacity: 1; }
+}
+
+@keyframes psycho-text {
+  0%, 100% { text-shadow: 0 0 0 transparent; }
+  50% { text-shadow: calc(var(--glitch-i) * 4px) 0 var(--color-destructive), calc(var(--glitch-i) * -4px) 0 var(--color-primary); }
+}
