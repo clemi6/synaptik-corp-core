@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { AlertTriangle, ShieldCheck } from "lucide-react";
+import { GlitchOverlay } from "./GlitchOverlay";
 
 const modules = [
   { id: "cortex", label: "Synapse Overclock v4", load: 22 },
@@ -26,8 +27,12 @@ export function Simulator() {
         ? { label: "SURVEILLANCE REQUISE", tone: "text-warning" }
         : { label: "RISQUE DE CYBERPSYCHOSE", tone: "text-destructive" };
 
+  // Le glitch démarre à 45% et devient total à 100%.
+  const glitch = Math.min(1, Math.max(0, (psychose - 45) / 55));
+
   return (
     <section id="simulateur" className="relative border-t border-border py-24">
+      <GlitchOverlay level={glitch} psychose={psychose} />
       <div className="grid-bg absolute inset-0 opacity-60" aria-hidden />
       <div className="relative mx-auto max-w-5xl px-5">
         <p className="mono-label flex items-center gap-3">
@@ -77,7 +82,19 @@ export function Simulator() {
 
           <div className="bg-card p-6">
             <p className="mono-label">Rapport de télémétrie</p>
-            <p className={`mt-4 font-display text-4xl font-black ${status.tone}`}>{psychose}%</p>
+            <p
+              className={`mt-4 font-display text-4xl font-black ${status.tone}`}
+              style={
+                glitch > 0
+                  ? ({
+                      "--glitch-i": glitch,
+                      animation: `psycho-text ${(0.7 - glitch * 0.45).toFixed(2)}s steps(2) infinite`,
+                    } as React.CSSProperties)
+                  : undefined
+              }
+            >
+              {psychose}%
+            </p>
             <p className={`mono-label mt-2 ${status.tone}`}>{status.label}</p>
 
             <div className="mt-6 h-2 w-full bg-secondary">
