@@ -13,6 +13,8 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AnatomieRouteImport } from './routes/anatomie'
 import { Route as CatalogueRouteImport } from './routes/catalogue'
 import { Route as CorpRouteImport } from './routes/corp'
+import { Route as PaiementRouteImport } from './routes/paiement'
+import { Route as PanierRouteImport } from './routes/panier'
 import { Route as SimulateurRouteImport } from './routes/simulateur'
 
 const IndexRoute = IndexRouteImport.update({
@@ -35,6 +37,16 @@ const CorpRoute = CorpRouteImport.update({
   path: '/corp',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PaiementRoute = PaiementRouteImport.update({
+  id: '/paiement',
+  path: '/paiement',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PanierRoute = PanierRouteImport.update({
+  id: '/panier',
+  path: '/panier',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SimulateurRoute = SimulateurRouteImport.update({
   id: '/simulateur',
   path: '/simulateur',
@@ -46,6 +58,8 @@ export interface FileRoutesByFullPath {
   '/anatomie': typeof AnatomieRoute
   '/catalogue': typeof CatalogueRoute
   '/corp': typeof CorpRoute
+  '/paiement': typeof PaiementRoute
+  '/panier': typeof PanierRoute
   '/simulateur': typeof SimulateurRoute
 }
 export interface FileRoutesByTo {
@@ -53,6 +67,8 @@ export interface FileRoutesByTo {
   '/anatomie': typeof AnatomieRoute
   '/catalogue': typeof CatalogueRoute
   '/corp': typeof CorpRoute
+  '/paiement': typeof PaiementRoute
+  '/panier': typeof PanierRoute
   '/simulateur': typeof SimulateurRoute
 }
 export interface FileRoutesById {
@@ -61,14 +77,38 @@ export interface FileRoutesById {
   '/anatomie': typeof AnatomieRoute
   '/catalogue': typeof CatalogueRoute
   '/corp': typeof CorpRoute
+  '/paiement': typeof PaiementRoute
+  '/panier': typeof PanierRoute
   '/simulateur': typeof SimulateurRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/anatomie' | '/catalogue' | '/corp' | '/simulateur'
+  fullPaths:
+    | '/'
+    | '/anatomie'
+    | '/catalogue'
+    | '/corp'
+    | '/paiement'
+    | '/panier'
+    | '/simulateur'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/anatomie' | '/catalogue' | '/corp' | '/simulateur'
-  id: '__root__' | '/' | '/anatomie' | '/catalogue' | '/corp' | '/simulateur'
+  to:
+    | '/'
+    | '/anatomie'
+    | '/catalogue'
+    | '/corp'
+    | '/paiement'
+    | '/panier'
+    | '/simulateur'
+  id:
+    | '__root__'
+    | '/'
+    | '/anatomie'
+    | '/catalogue'
+    | '/corp'
+    | '/paiement'
+    | '/panier'
+    | '/simulateur'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -76,6 +116,8 @@ export interface RootRouteChildren {
   AnatomieRoute: typeof AnatomieRoute
   CatalogueRoute: typeof CatalogueRoute
   CorpRoute: typeof CorpRoute
+  PaiementRoute: typeof PaiementRoute
+  PanierRoute: typeof PanierRoute
   SimulateurRoute: typeof SimulateurRoute
 }
 
@@ -109,6 +151,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CorpRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/paiement': {
+      id: '/paiement'
+      path: '/paiement'
+      fullPath: '/paiement'
+      preLoaderRoute: typeof PaiementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/panier': {
+      id: '/panier'
+      path: '/panier'
+      fullPath: '/panier'
+      preLoaderRoute: typeof PanierRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/simulateur': {
       id: '/simulateur'
       path: '/simulateur'
@@ -124,6 +180,8 @@ const rootRouteChildren: RootRouteChildren = {
   AnatomieRoute: AnatomieRoute,
   CatalogueRoute: CatalogueRoute,
   CorpRoute: CorpRoute,
+  PaiementRoute: PaiementRoute,
+  PanierRoute: PanierRoute,
   SimulateurRoute: SimulateurRoute,
 }
 export const routeTree = rootRouteImport

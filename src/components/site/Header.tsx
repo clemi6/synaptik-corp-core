@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { Activity, ShoppingCart, User } from "lucide-react";
 import { Link } from "@tanstack/react-router";
+import { useCart } from "@/lib/cart";
 
 export function Header() {
   const [ping, setPing] = useState(12);
+  const { count } = useCart();
 
   useEffect(() => {
     const id = setInterval(() => setPing(8 + Math.floor(Math.random() * 14)), 2200);
@@ -52,10 +54,13 @@ export function Header() {
             <User className="h-4 w-4" aria-hidden />
             <span className="hidden sm:inline">Profil</span>
           </button>
-          <button className="bevel-sm flex items-center gap-2 border border-primary/40 bg-primary/10 px-3 py-2 font-mono text-[11px] tracking-widest text-primary transition-colors hover:bg-primary/20">
+          <Link
+            to="/panier"
+            className="bevel-sm flex items-center gap-2 border border-primary/40 bg-primary/10 px-3 py-2 font-mono text-[11px] tracking-widest text-primary transition-colors hover:bg-primary/20"
+          >
             <ShoppingCart className="h-4 w-4" aria-hidden />
-            0
-          </button>
+            {count}
+          </Link>
         </div>
       </div>
       <div className="flex items-center gap-2 border-t border-border/60 bg-card/40 px-5 py-1">

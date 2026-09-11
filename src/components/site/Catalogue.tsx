@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useCart } from "@/lib/cart";
 import { products, categories } from "@/data/products";
 import chip from "@/assets/chip.jpg";
 import eye from "@/assets/eye.jpg";
@@ -22,6 +23,7 @@ const personas = [
 ];
 
 export function Catalogue() {
+  const { add } = useCart();
   const [cat, setCat] = useState<string>("Tout");
   const [persona, setPersona] = useState("all");
 
@@ -120,7 +122,9 @@ export function Catalogue() {
                   <span className="font-mono text-lg text-primary">
                     {p.price.toLocaleString("fr-FR")} €
                   </span>
-                  <button className="bevel-sm border border-primary/50 bg-primary/10 px-3 py-2 font-mono text-[11px] tracking-widest text-primary transition-colors hover:bg-primary hover:text-primary-foreground">
+                  <button
+                    onClick={() => add(p.slug)}
+                    className="bevel-sm border border-primary/50 bg-primary/10 px-3 py-2 font-mono text-[11px] tracking-widest text-primary transition-colors hover:bg-primary hover:text-primary-foreground">
                     AJOUTER
                   </button>
                 </div>
