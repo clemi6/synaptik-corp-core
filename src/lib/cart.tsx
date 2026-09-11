@@ -19,6 +19,7 @@ const KEY = "synaptik-cart";
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [lines, setLines] = useState<CartLine[]>([]);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     try {
@@ -27,15 +28,17 @@ export function CartProvider({ children }: { children: ReactNode }) {
     } catch {
       /* ignore */
     }
+    setLoaded(true);
   }, []);
 
   useEffect(() => {
+    if (!loaded) return;
     try {
       localStorage.setItem(KEY, JSON.stringify(lines));
     } catch {
       /* ignore */
     }
-  }, [lines]);
+  }, [lines, loaded]);
 
   const value = useMemo<CartCtx>(() => {
     const detailed = lines.flatMap((l) => {
